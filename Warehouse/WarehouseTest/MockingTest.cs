@@ -29,6 +29,9 @@ namespace WarehouseTest
             Order a = new Order(product, amount);
 
             Assert.IsTrue(a.CanFillOrder(warehouseMoq.Object));
+
+            warehouseMoq.Verify(warehouse => warehouse.HasProduct(product), Times.Once);
+            warehouseMoq.Verify(warehouse => warehouse.CurrentStock(product), Times.Once);
         }
 
         [DataTestMethod]
@@ -42,6 +45,9 @@ namespace WarehouseTest
             Order a = new Order(product, amount);
 
             Assert.IsFalse(a.CanFillOrder(warehouseMoq.Object));
+
+            warehouseMoq.Verify(warehouse => warehouse.HasProduct(product), Times.Once);
+            warehouseMoq.Verify(warehouse => warehouse.CurrentStock(product), Times.Once);
         }
 
         [DataTestMethod]
@@ -49,9 +55,6 @@ namespace WarehouseTest
         [DataRow("B", 15)]
         public void Order_Correctly_Calls_IWarehouse_When_Filling_An_Order(string product, int amount)
         {
-            warehouseMoq.Setup(warehouse => warehouse.HasProduct(product)).Returns(true);
-            warehouseMoq.Setup(warehouse => warehouse.CurrentStock(product)).Returns(amount);
-
             Order a = new Order(product, amount);
 
             a.Fill(warehouseMoq.Object);
@@ -65,9 +68,6 @@ namespace WarehouseTest
         [DataRow("B", 10)]
         public void Order_Correctly_Calls_IWarehouse_When_Filling_An_Order_And_Throws_Exception_When_Already_Filled(string product, int amount)
         {
-            warehouseMoq.Setup(warehouse => warehouse.HasProduct(product)).Returns(true);
-            warehouseMoq.Setup(warehouse => warehouse.CurrentStock(product)).Returns(amount);
-
             Order a = new Order(product, amount);
 
             a.Fill(warehouseMoq.Object);
