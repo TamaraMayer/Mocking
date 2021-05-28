@@ -60,6 +60,8 @@ namespace WarehouseTest
             a.Fill(warehouseMoq.Object);
 
             Assert.IsTrue(a.IsFilled);
+
+            warehouseMoq.Verify((p) => p.TakeStock(product, amount), Times.Once);
         }
 
 
@@ -73,6 +75,8 @@ namespace WarehouseTest
             a.Fill(warehouseMoq.Object);
 
             Assert.ThrowsException<OrderAlreadyFilled>(() => a.Fill(warehouseMoq.Object));
+
+            warehouseMoq.Verify((p) => p.TakeStock(product, amount), Times.Once);
         }
     }
 }
